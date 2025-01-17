@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Brain, Cpu, Zap } from 'lucide-react'
+import Image from 'next/image'
 
 const performanceData = [
   { date: '2023-01-01', value: 1000, aiConfidence: 80 },
@@ -32,18 +33,19 @@ const purchaseLogs = [
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      <header className="w-full p-4 bg-zinc-900 border-b border-zinc-800">
+      <header className="w-full p-4 bg-black border-b border-zinc-800">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-blue-400">VCMilei Dashboard</h1>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent">VCMilei Dashboard</h1>
           </div>
         </div>
       </header>
+      
       <main className="flex-grow p-6 flex flex-col gap-6 max-w-7xl mx-auto w-full">
-        <Card className="w-full bg-zinc-900 border-zinc-800">
+        <Card className="w-full bg-zinc-900/50 border-zinc-800">
           <CardHeader>
-            <CardTitle className="text-2xl text-cyan-300 flex items-center gap-2">
-              <Zap className="w-6 h-6" />
+            <CardTitle className="text-2xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent flex items-center gap-2">
+              <Zap className="w-6 h-6 text-violet-400" />
               VCMilei Token Performance
             </CardTitle>
           </CardHeader>
@@ -54,29 +56,58 @@ export default function Dashboard() {
                 <XAxis dataKey="date" stroke="#888" />
                 <YAxis yAxisId="left" stroke="#888" />
                 <YAxis yAxisId="right" orientation="right" stroke="#888" />
-                <Tooltip contentStyle={{ backgroundColor: '#222', border: '1px solid #444' }} />
-                <Line yAxisId="left" type="monotone" dataKey="value" stroke="#4ade80" strokeWidth={2} dot={{ fill: '#4ade80', strokeWidth: 2 }} activeDot={{ r: 8 }} />
-                <Line yAxisId="right" type="monotone" dataKey="aiConfidence" stroke="#60a5fa" strokeWidth={2} dot={{ fill: '#60a5fa', strokeWidth: 2 }} />
+                <Tooltip contentStyle={{ backgroundColor: '#18181b', border: '1px solid #27272a' }} />
+                <Line 
+                  yAxisId="left" 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#8b5cf6" 
+                  strokeWidth={2} 
+                  dot={{ fill: '#8b5cf6', strokeWidth: 2 }} 
+                  activeDot={{ r: 8 }} 
+                />
+                <Line 
+                  yAxisId="right" 
+                  type="monotone" 
+                  dataKey="aiConfidence" 
+                  stroke="#60a5fa" 
+                  strokeWidth={2} 
+                  dot={{ fill: '#60a5fa', strokeWidth: 2 }} 
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
+        
         <Tabs defaultValue="contracts" className="w-full">
-          <TabsList className="bg-zinc-900">
-            <TabsTrigger value="contracts" className="data-[state=active]:bg-zinc-800">Safe Contracts</TabsTrigger>
-            <TabsTrigger value="purchases" className="data-[state=active]:bg-zinc-800">Purchases</TabsTrigger>
+          <TabsList className="bg-zinc-900/50 border border-zinc-800">
+            <TabsTrigger 
+              value="contracts" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-violet-400 data-[state=active]:text-white"
+            >
+              Safe Contracts
+            </TabsTrigger>
+            <TabsTrigger 
+              value="purchases" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-violet-400 data-[state=active]:text-white"
+            >
+              Purchases
+            </TabsTrigger>
           </TabsList>
+          
           <TabsContent value="contracts">
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-zinc-900/50 border-zinc-800">
               <CardHeader>
-                <CardTitle className="text-xl text-cyan-300">Safe Contract Logs</CardTitle>
+                <CardTitle className="text-xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent">
+                  Safe Contract Logs
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[300px]">
                   {contractLogs.map((log) => (
-                    <div key={log.id} className="mb-4 p-3 bg-zinc-800 rounded-lg border border-zinc-700">
+                    <div key={log.id} className="mb-4 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
                       <p className="text-sm text-gray-400">{log.timestamp}</p>
-                      <p className="text-lg font-semibold text-green-400">{log.action}: {log.name}</p>
+                      <p className="text-lg font-semibold text-violet-400">{log.action}: {log.name}</p>
                       <p className="text-sm text-gray-300">Address: {log.address}</p>
                       <p className="text-sm italic text-blue-300 mt-2">AI says: {log.aiComment}</p>
                     </div>
@@ -85,17 +116,20 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           </TabsContent>
+          
           <TabsContent value="purchases">
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-zinc-900/50 border-zinc-800">
               <CardHeader>
-                <CardTitle className="text-xl text-cyan-300">Purchase Logs</CardTitle>
+                <CardTitle className="text-xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent">
+                  Purchase Logs
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[300px]">
                   {purchaseLogs.map((log) => (
-                    <div key={log.id} className="mb-4 p-3 bg-zinc-800 rounded-lg border border-zinc-700">
+                    <div key={log.id} className="mb-4 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
                       <p className="text-sm text-gray-400">{log.timestamp}</p>
-                      <p className="text-lg font-semibold text-green-400">Bought {log.amount} {log.asset}</p>
+                      <p className="text-lg font-semibold text-violet-400">Bought {log.amount} {log.asset}</p>
                       <p className="text-sm text-gray-300">Price: {log.price} each</p>
                       <p className="text-sm italic text-blue-300 mt-2">AI says: {log.aiComment}</p>
                     </div>

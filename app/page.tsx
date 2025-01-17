@@ -75,10 +75,11 @@ export default function LandingPage() {
             <h3 className="text-4xl font-extrabold mb-8">
               MAGA
             </h3>
-            <div className="flex justify-center items-center gap-8">
+            <div className="flex flex-wrap justify-center items-center gap-8">
               <Image src="/arg.png" alt="Argentina" width={100} height={100} className="object-contain" />
-              <Image src="/usa.png" alt="USA" width={100} height={100} className="object-contain" />
+              <Image src="/usa.png" alt="USA" width={120} height={120} className="object-contain" />
               <Image src="/dont.png" alt="Don't Tread On Me" width={100} height={100} className="object-contain" />
+              <Image src="/israel.png" alt="Israel" width={100} height={100} className="object-contain" />
             </div>
           </div>
         </div>
