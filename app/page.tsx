@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Zap, Rocket, Lock } from 'lucide-react'
+import { Zap, Rocket, Lock, Send } from 'lucide-react'
 import { useState } from 'react'
 import Image from 'next/image'
 
@@ -54,6 +54,13 @@ export default function LandingPage() {
               onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSd5oW17JZ0JD65PbwRRtQrQ7OVG4qr1O1qvqWfIoawum-zJsg/viewform?usp=dialog', '_blank')}
             >
               Pitch Me, Leftie
+            </Button>
+            <Button 
+              className="bg-zinc-800 hover:bg-zinc-700 text-violet-300 border border-violet-300/20 px-12 py-8 text-xl font-bold rounded-xl transform hover:scale-105 transition-all w-full md:w-auto"
+              onClick={() => window.open('https://t.me/+lCP-uigWv_piNWVk', '_blank')}
+            >
+              <Send className="mr-2 h-6 w-6" />
+              Join Telegram
             </Button>
             <Button 
               className="bg-black hover:bg-zinc-900 text-white border border-zinc-800 px-12 py-8 text-xl font-bold rounded-xl transform hover:scale-105 transition-all w-full md:w-auto"
