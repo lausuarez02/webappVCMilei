@@ -3,19 +3,84 @@
 import { Button } from "@/components/ui/button"
 import { Zap, Send } from 'lucide-react'
 import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
+import Marquee from 'react-fast-marquee'
+
+const FlagBanner = ({ position }: { position: 'top' | 'bottom' }) => {
+  return (
+    <div className={`fixed ${position}-0 w-full bg-zinc-900/50 backdrop-blur-sm border-zinc-800 z-50 ${position === 'top' ? 'border-b' : 'border-t'}`}>
+      <Marquee
+        speed={50}
+        gradient={false}
+        className="py-2"
+      >
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+      </Marquee>
+    </div>
+  )
+}
 
 export default function WorkingPage() {
-  return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      {/* <header className="w-full p-4 bg-black border-b border-zinc-800">
-        <div className="flex justify-center items-center max-w-7xl mx-auto">
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent">VCMilei</h1>
-          </div>
-        </div>
-      </header> */}
+  const [vantaEffect, setVantaEffect] = useState<any>(null)
+  const vantaRef = useRef(null)
 
-      <main className="flex-grow flex flex-col items-center justify-center p-6">
+  useEffect(() => {
+    if (!vantaEffect && typeof window !== 'undefined') {
+      setVantaEffect(
+        // @ts-ignore
+        window.VANTA.NET({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x8b5cf6, // Primary violet color
+          backgroundColor: 0x000000,
+          points: 10.00,
+          maxDistance: 20.00,
+          spacing: 20.00,
+          showDots: false
+        })
+      )
+    }
+    return () => {
+      if (vantaEffect) vantaEffect.destroy()
+    }
+  }, [vantaEffect])
+
+  return (
+    <div className="min-h-screen bg-black text-white flex flex-col relative overflow-hidden">
+      {/* Vanta.js background */}
+      <div ref={vantaRef} className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
+      </div>
+
+      <FlagBanner position="top" />
+
+      <main className="flex-grow flex flex-col items-center justify-center p-6 relative z-10">
         <div className="max-w-3xl text-center space-y-12">
           <div className="space-y-6">
             <Image 
@@ -75,6 +140,8 @@ export default function WorkingPage() {
           </div>
         </div>
       </main>
+
+      <FlagBanner position="bottom" />
     </div>
   )
 } 
