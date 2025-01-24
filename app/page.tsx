@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Zap, Rocket, Lock, Send } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Marquee from 'react-fast-marquee'
 
@@ -65,6 +65,8 @@ const FlagBanner = ({ position }: { position: 'top' | 'bottom' }) => {
 
 export default function LandingPage() {
   const [email, setEmail] = useState('')
+  const [vantaEffect, setVantaEffect] = useState<any>(null)
+  const vantaRef = useRef(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -73,18 +75,50 @@ export default function LandingPage() {
     setEmail('')
   }
 
+  useEffect(() => {
+    if (!vantaEffect && typeof window !== 'undefined') {
+      setVantaEffect(
+        // @ts-ignore
+        window.VANTA.NET({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x8b5cf6, // Primary violet color
+          backgroundColor: 0x000000,
+          points: 10.00,
+          maxDistance: 20.00,
+          spacing: 20.00,
+          showDots: false
+        })
+      )
+    }
+    return () => {
+      if (vantaEffect) vantaEffect.destroy()
+    }
+  }, [vantaEffect])
+
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
+    <div className="min-h-screen bg-black text-white flex flex-col relative overflow-hidden">
+      {/* Vanta.js background */}
+      <div ref={vantaRef} className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
+      </div>
+
       <FlagBanner position="top" />
       
-      <header className="w-full p-4 bg-black mt-[60px]">
+      <header className="w-full p-4 bg-transparent mt-[60px] relative z-10">
         <div className="flex justify-center items-center max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
           </div>
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-start p-6">
+      <main className="flex-grow flex flex-col items-center justify-start p-6 relative z-10">
         <div className="max-w-3xl text-center space-y-12">
           <div className="space-y-4">
             <Image 
