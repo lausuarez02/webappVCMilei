@@ -4,8 +4,64 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Zap, Rocket, Lock, Send } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Marquee from 'react-fast-marquee'
+
+const FlagBanner = ({ position }: { position: 'top' | 'bottom' }) => {
+  return (
+    <div className={`fixed ${position}-0 w-full bg-zinc-900/50 backdrop-blur-sm border-zinc-800 z-50 ${position === 'top' ? 'border-b' : 'border-t'}`}>
+      <Marquee
+        speed={50}
+        gradient={false}
+        className="py-2"
+      >
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+        <span className="text-xl font-bold bg-gradient-to-r from-violet-400 to-violet-300 bg-clip-text text-transparent mx-4">
+          FREEDOM
+        </span>
+        <Image src="/arg.png" alt="Argentina" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/usa.png" alt="USA" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/dont.png" alt="Don't Tread On Me" width={40} height={40} className="object-contain mx-4" />
+        <Image src="/israel.png" alt="Israel" width={40} height={40} className="object-contain mx-4" />
+      </Marquee>
+    </div>
+  )
+}
 
 export default function LandingPage() {
   const [email, setEmail] = useState('')
@@ -19,7 +75,9 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      <header className="w-full p-4 bg-black">
+      <FlagBanner position="top" />
+      
+      <header className="w-full p-4 bg-black mt-[60px]">
         <div className="flex justify-center items-center max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
           </div>
@@ -84,6 +142,8 @@ export default function LandingPage() {
           </div>
         </div>
       </main>
+
+      <FlagBanner position="bottom" />
     </div>
   )
 }
