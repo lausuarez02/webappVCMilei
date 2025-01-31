@@ -1,33 +1,17 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Brain, Cpu, Zap } from 'lucide-react'
+import { Zap } from 'lucide-react'
 import Image from 'next/image'
 
 const performanceData = [
-  { date: '2023-01-01', value: 1000, aiConfidence: 80 },
-  { date: '2023-02-01', value: 1200, aiConfidence: 85 },
-  { date: '2023-03-01', value: 1100, aiConfidence: 75 },
-  { date: '2023-04-01', value: 1400, aiConfidence: 90 },
-  { date: '2023-05-01', value: 1300, aiConfidence: 88 },
-  { date: '2023-06-01', value: 1600, aiConfidence: 95 },
-]
-
-const contractLogs = [
-  { id: 1, action: "Deployed", name: "MemeVault", address: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", timestamp: "2023-06-10 09:15:23", aiComment: "Let the meme economy begin! 🚀🐸" },
-  { id: 2, action: "Upgraded", name: "SatireFactory", address: "0x123f681646d4a755815f9cb19e1acc8565a0c2ac", timestamp: "2023-06-10 10:30:45", aiComment: "Now with 200% more irony! 🎭" },
-  { id: 3, action: "Paused", name: "DiamondHandsStaking", address: "0x9876543210abcdef0123456789abcdef01234567", timestamp: "2023-06-10 11:45:12", aiComment: "Even AIs need a coffee break ☕" },
-  { id: 4, action: "Unpaused", name: "DiamondHandsStaking", address: "0x9876543210abcdef0123456789abcdef01234567", timestamp: "2023-06-10 12:15:00", aiComment: "Back to HODLing! 💎🙌" },
-]
-
-const purchaseLogs = [
-  { id: 1, asset: "Laugh-Fi Tokens", amount: "42,000", price: "$0.69", timestamp: "2023-06-10 09:16:45", aiComment: "Comedy gold, literally! 🤣💰" },
-  { id: 2, asset: "Decentralized Meme ETF", amount: "10", price: "$420.00", timestamp: "2023-06-10 09:20:01", aiComment: "Diversifying our meme portfolio 📊😂" },
-  { id: 3, asset: "AIcoin", amount: "100,000", price: "$0.01", timestamp: "2023-06-10 09:22:30", aiComment: "Investing in my own kind. Totally not biased! 🤖" },
-  { id: 4, asset: "NFT of a JPEG of a PDF of a Whitepaper", amount: "1", price: "$1337.00", timestamp: "2023-06-10 09:31:22", aiComment: "It's called 'art', look it up 🎨" },
+  { date: '2024-01-01', value: 1000, aiConfidence: 80 },
+  { date: '2024-02-01', value: 1200, aiConfidence: 85 },
+  { date: '2024-03-01', value: 1100, aiConfidence: 75 },
+  { date: '2024-03-15', value: 1400, aiConfidence: 90 },
+  { date: '2024-03-20', value: 1300, aiConfidence: 88 },
+  { date: '2024-03-25', value: 1600, aiConfidence: 95 },
 ]
 
 export default function Dashboard() {
@@ -42,14 +26,71 @@ export default function Dashboard() {
       </header>
       
       <main className="flex-grow p-6 flex flex-col gap-6 max-w-7xl mx-auto w-full">
+        {/* MODE Token Investment Card */}
         <Card className="w-full bg-zinc-900/50 border-zinc-800">
           <CardHeader>
             <CardTitle className="text-2xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent flex items-center gap-2">
               <Zap className="w-6 h-6 text-violet-400" />
-              VCMilei Token Performance
+              First Investment: MODE Token
             </CardTitle>
           </CardHeader>
-          <CardContent className="h-[400px]">
+          <div className="p-6">
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <Image 
+                src="https://cdn.prod.website-files.com/6605a7a66e0fb95614df9eab/6605a7a66e0fb95614df9ec9_64c3bc4651304278d5aaecee_Logo_mode.svg" 
+                alt="MODE Token" 
+                width={200} 
+                height={200}
+                className="rounded-xl shadow-lg shadow-violet-500/20"
+              />
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-violet-400">Why VCMilei Chose MODE</h3>
+                <p className="text-gray-300">
+                  VIVA LA LIBERTAD CARAJO! MODE is the ultimate based Layer 2 solution that fights against the state's monetary repression. 
+                  Built on Optimism with revenue sharing and low fees, it's exactly what the free market demands. 
+                  No Keynesians were involved in the making of this protocol!
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-zinc-800/50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-400">Initial Investment</p>
+                    <p className="text-lg font-bold text-violet-300">$10,000</p>
+                  </div>
+                  <div className="bg-zinc-800/50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-400">Current Value</p>
+                    <p className="text-lg font-bold text-violet-300">$16,000</p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <h4 className="text-sm font-semibold text-gray-400">Key Based Features:</h4>
+                  <ul className="list-disc list-inside text-gray-300 space-y-1">
+                    <li>Revenue sharing with token holders (not socialist redistribution!)</li>
+                    <li>True free market fee mechanism</li>
+                    <li>Built on Optimism's based infrastructure</li>
+                    <li>Zero central planning, pure market dynamics</li>
+                  </ul>
+                  <a 
+                    href="https://mode.network" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="mt-4 text-violet-400 hover:text-violet-300 flex items-center gap-2 w-fit"
+                  >
+                    Visit MODE Network <Zap className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Performance Chart */}
+        {/* <Card className="w-full bg-zinc-900/50 border-zinc-800">
+          {<CardHeader>
+            <CardTitle className="text-2xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent flex items-center gap-2">
+              <Zap className="w-6 h-6 text-violet-400" />
+              Investment Performance
+            </CardTitle>
+          </CardHeader> 
+          <div className="h-[400px] p-6">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={performanceData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -76,69 +117,8 @@ export default function Dashboard() {
                 />
               </LineChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        
-        <Tabs defaultValue="contracts" className="w-full">
-          <TabsList className="bg-zinc-900/50 border border-zinc-800">
-            <TabsTrigger 
-              value="contracts" 
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-violet-400 data-[state=active]:text-white"
-            >
-              Safe Contracts
-            </TabsTrigger>
-            <TabsTrigger 
-              value="purchases" 
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-violet-400 data-[state=active]:text-white"
-            >
-              Purchases
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="contracts">
-            <Card className="bg-zinc-900/50 border-zinc-800">
-              <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent">
-                  Safe Contract Logs
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[300px]">
-                  {contractLogs.map((log) => (
-                    <div key={log.id} className="mb-4 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
-                      <p className="text-sm text-gray-400">{log.timestamp}</p>
-                      <p className="text-lg font-semibold text-violet-400">{log.action}: {log.name}</p>
-                      <p className="text-sm text-gray-300">Address: {log.address}</p>
-                      <p className="text-sm italic text-blue-300 mt-2">AI says: {log.aiComment}</p>
-                    </div>
-                  ))}
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="purchases">
-            <Card className="bg-zinc-900/50 border-zinc-800">
-              <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent">
-                  Purchase Logs
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[300px]">
-                  {purchaseLogs.map((log) => (
-                    <div key={log.id} className="mb-4 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700">
-                      <p className="text-sm text-gray-400">{log.timestamp}</p>
-                      <p className="text-lg font-semibold text-violet-400">Bought {log.amount} {log.asset}</p>
-                      <p className="text-sm text-gray-300">Price: {log.price} each</p>
-                      <p className="text-sm italic text-blue-300 mt-2">AI says: {log.aiComment}</p>
-                    </div>
-                  ))}
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </Card> */}
       </main>
     </div>
   )

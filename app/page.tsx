@@ -136,8 +136,8 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-center gap-6">
             <Button 
               className="bg-gradient-to-r from-blue-500 to-violet-400 hover:from-blue-600 hover:to-violet-500 text-white px-12 py-8 text-xl font-bold rounded-xl transform hover:scale-105 transition-all w-full md:w-auto"
-              // onClick={() => window.location.href = '/dashboard'}
-              onClick={() => window.location.href = '/working'}
+              onClick={() => window.location.href = '/dashboard'}
+              // onClick={() => window.location.href = '/working'}
               >
               Go to Dashboard
             </Button>
