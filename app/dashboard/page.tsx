@@ -26,55 +26,59 @@ export default function Dashboard() {
       </header>
       
       <main className="flex-grow p-6 flex flex-col gap-6 max-w-7xl mx-auto w-full">
-        {/* MODE Token Investment Card */}
+        {/* Bluefin Investment Card */}
         <Card className="w-full bg-zinc-900/50 border-zinc-800">
           <CardHeader>
             <CardTitle className="text-2xl bg-gradient-to-r from-blue-400 to-violet-300 bg-clip-text text-transparent flex items-center gap-2">
               <Zap className="w-6 h-6 text-violet-400" />
-              First Investment: MODE Token
+              First Investment: Bluefin Protocol
             </CardTitle>
           </CardHeader>
           <div className="p-6">
             <div className="flex flex-col md:flex-row gap-8 items-center">
               <Image 
-                src="https://cdn.prod.website-files.com/6605a7a66e0fb95614df9eab/6605a7a66e0fb95614df9ec9_64c3bc4651304278d5aaecee_Logo_mode.svg" 
-                alt="MODE Token" 
+                src="/bluefin.svg" 
+                alt="Bluefin" 
                 width={200} 
                 height={200}
                 className="rounded-xl shadow-lg shadow-violet-500/20"
               />
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-violet-400">Why VCMilei Chose MODE</h3>
+                <h3 className="text-xl font-bold text-violet-400">Why VCMilei Chose Bluefin</h3>
                 <p className="text-gray-300">
-                  VIVA LA LIBERTAD CARAJO! MODE is the ultimate based Layer 2 solution that fights against the state's monetary repression. 
-                  Built on Optimism with revenue sharing and low fees, it's exactly what the free market demands. 
-                  No Keynesians were involved in the making of this protocol!
+                  VIVA LA LIBERTAD CARAJO! A decentralized spot and derivatives platform with $37B in traded volume, 
+                  backed by serious capitalists like Polychain and Brevan Howard. This isn't just another protocol—it's 
+                  a free market revolution in finance! Built to destroy the financial intermediaries that live off parasitism.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="bg-zinc-800/50 p-4 rounded-lg">
                     <p className="text-sm text-gray-400">Initial Investment</p>
-                    <p className="text-lg font-bold text-violet-300">$10,000</p>
+                    <p className="text-lg font-bold text-violet-300">$200</p>
                   </div>
                   <div className="bg-zinc-800/50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-400">Current Value</p>
-                    <p className="text-lg font-bold text-violet-300">$16,000</p>
+                    <p className="text-sm text-gray-400">Current Token Price</p>
+                    <p className="text-lg font-bold text-violet-300">$0.1225</p>
+                  </div>
+                  <div className="bg-zinc-800/50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-400">Tokens Held</p>
+                    <p className="text-lg font-bold text-violet-300">1,632</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <h4 className="text-sm font-semibold text-gray-400">Key Based Features:</h4>
+                  <h4 className="text-sm font-semibold text-gray-400">Based Market Features:</h4>
                   <ul className="list-disc list-inside text-gray-300 space-y-1">
-                    <li>Revenue sharing with token holders (not socialist redistribution!)</li>
-                    <li>True free market fee mechanism</li>
-                    <li>Built on Optimism's based infrastructure</li>
-                    <li>Zero central planning, pure market dynamics</li>
+                    <li>Free market competition crushing it on Sui Network</li>
+                    <li>Derivatives + pre-launch markets (no state intervention!)</li>
+                    <li>Spot AMM for retail adoption (real free market liquidity)</li>
+                    <li>Antifragile design against regulatory parasites</li>
                   </ul>
                   <a 
-                    href="https://mode.network" 
+                    href="https://bluefin.io" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="mt-4 text-violet-400 hover:text-violet-300 flex items-center gap-2 w-fit"
                   >
-                    Visit MODE Network <Zap className="w-4 h-4" />
+                    Visit Bluefin <Zap className="w-4 h-4" />
                   </a>
                 </div>
               </div>
