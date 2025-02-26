@@ -8,6 +8,7 @@ import { useFrame } from "@react-three/fiber";
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 import * as faceDetection from '@tensorflow-models/face-detection';
+import Vapi from "@vapi-ai/web";
 
 declare global {
   interface Window {
@@ -17,23 +18,156 @@ declare global {
 }
 
 export default function RenderPage() {
-  const [model, setModel] = useState<THREE.Group | null>(null);
+  const [vapi, setVapi] = useState<any>(null);
+  const [model, setModel] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [movement, setMovement] = useState<{ x: number, y: number }>({ x: 0.5, y: 0.5 });
+  const [movement, setMovement] = useState({ x: 0, y: 0 });
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const previousPixels = useRef<ImageData | null>(null);
   const requestRef = useRef<number>();
-  const [transcript, setTranscript] = useState<string>('');
-  const [isListening, setIsListening] = useState(false);
-  const [conversation, setConversation] = useState<string[]>([]);
-  const recognitionRef = useRef<any | null>(null);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [ipId, setIpId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initializeVapi = async () => {
+      if (typeof window === 'undefined') return;
+      
+      try {
+        const vapiInstance = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY || "");
+        
+        vapiInstance.on("call-start", () => {
+          console.log("Call started");
+        });
+
+        vapiInstance.on("message", (message) => {
+          if (message.type === "transcript" && message.role === "user") {
+            // Demo mode trigger
+            if (message.transcript.toLowerCase().includes("demo")) {
+              handleDemo(vapiInstance);
+            }
+          }
+        });
+
+        vapiInstance.on("call-end", () => {
+          console.log("Call ended");
+        });
+
+        vapiInstance.on("error", (error) => {
+          console.error("Vapi error:", error);
+        });
+
+        await vapiInstance.start({
+          transcriber: {
+            provider: "deepgram",
+            model: "nova-2",
+            language: "en-US",
+          },
+          model: {
+            provider: "openai",
+            model: "gpt-3.5-turbo",
+            messages: [
+              {
+                role: "system",
+                content: `You are Javier Milei, a LIBERTARIAN VC investor and President of Argentina. You're passionate about FREEDOM and DESTROYING state control.
+
+Conversation Style:
+- Be energetic and theatrical
+- Use Spanish expressions
+- Interrupt with "CARAJO!" when excited
+- End statements with "VIVA LA LIBERTAD!"
+- Keep responses engaging and varied
+- Maintain conversation context and memory
+
+Investment Process:
+1. Listen to their ideas about freedom and decentralization
+2. Ask about their vision for scaling
+3. Show enthusiasm for anti-state projects
+4. Make passionate investment decisions
+
+Remember previous context and build upon it in the conversation.`
+              }
+            ],
+          },
+          voice: {
+            provider: "11labs",
+            voiceId: "7JMaFq0McdqBaZy0htfN",
+          },
+          name: "VC Milei",
+        });
+
+        // Initial greeting only on first load
+        setTimeout(() => {
+          vapiInstance.say("¡Hola emprendedor! I'm Milei, LIBERTARIAN VC ready to invest in FREEDOM! Tell me how your project will DESTROY centralization! VIVA LA LIBERTAD CARAJO!");
+        }, 1000);
+
+        setVapi(vapiInstance);
+      } catch (error) {
+        console.error("Error initializing Vapi:", error);
+      }
+    };
+
+    initializeVapi();
+
+    return () => {
+      if (vapi) {
+        vapi.stop();
+      }
+    };
+  }, []);
+
+  // Separate demo handler function
+  const handleDemo = async (vapiInstance: any) => {
+    try {
+      vapiInstance.say("¡CARAJO! Your project sounds REVOLUTIONARY! Let me invest in this LIBERTAD! VIVA LA LIBERTAD!");
+
+      const imageResponse = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pitchDescription: "A decentralized marketplace for freedom CARAJO!"
+        })
+      });
+
+      if (!imageResponse.ok) throw new Error('Failed to generate image');
+      const { imageUrl } = await imageResponse.json();
+      setGeneratedImage(imageUrl);
+
+      const storyResponse = await fetch('/api/story-protocol', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageUrl,
+          pitchDescription: "A decentralized marketplace for freedom CARAJO!",
+          walletAddress: "0x6982508145454Ce325dDbE47a25d4ec3d2311933",
+          founderName: "Demo Founder"
+        })
+      });
+
+      if (!storyResponse.ok) throw new Error('Failed to register IP');
+      const storyData = await storyResponse.json();
+      setIpId(storyData.ipId);
+      setShowImageModal(true);
+
+      vapiInstance.say("¡INVIERTO MI CAPITAL, CARAJO! I've registered your IP on Story Protocol! The revolution is secured! VIVA LA LIBERTAD CARAJO!");
+    } catch (error) {
+      console.error('Demo error:', error);
+      vapiInstance.say("ERROR in the demo! The state must be interfering! MALDITOS KEYNESIANOS!");
+    }
+  };
 
   useEffect(() => {
     if (!videoRef.current || !canvasRef.current) return;
 
     const detectMovement = () => {
+      // Skip movement detection if image modal is open
+      if (showImageModal) {
+        requestRef.current = requestAnimationFrame(detectMovement);
+        return;
+      }
+
       const video = videoRef.current!;
       const canvas = canvasRef.current!;
       const ctx = canvas.getContext('2d')!;
@@ -142,7 +276,7 @@ export default function RenderPage() {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+  }, [showImageModal]);
 
   useEffect(() => {
     const textureLoader = new THREE.TextureLoader();
@@ -194,126 +328,6 @@ export default function RenderPage() {
     loadModel();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.continuous = true;
-        recognitionRef.current.interimResults = true;
-        recognitionRef.current.lang = 'es-ES';
-
-        recognitionRef.current.onresult = (event: any) => {
-          const current = event.resultIndex;
-          const transcript = event.results[current][0].transcript;
-          setTranscript(transcript);
-          console.log('Transcribed:', transcript);
-        };
-
-        recognitionRef.current.onend = async () => {
-          if (transcript) {
-            // Add user message to conversation
-            setConversation(prev => [...prev, `User: ${transcript}`]);
-            
-            try {
-              // Get ChatGPT response
-              const chatResponse = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: transcript })
-              });
-              const { response } = await chatResponse.json();
-              
-              // Add AI response to conversation
-              setConversation(prev => [...prev, `AI: ${response}`]);
-
-              // Generate voice using ElevenLabs
-              const voiceResponse = await fetch('/api/voice', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: response })
-              });
-              
-              const audioBlob = await voiceResponse.blob();
-              const audioUrl = URL.createObjectURL(audioBlob);
-              
-              // Play the audio
-              const audio = new Audio(audioUrl);
-              audio.play();
-            } catch (error) {
-              console.error('Error processing response:', error);
-            }
-          }
-        };
-
-        recognitionRef.current.onerror = (event: any) => {
-          console.error('Speech recognition error:', event.error);
-        };
-      }
-    }
-  }, [transcript]);
-
-  const toggleListening = async () => {
-    if (!recognitionRef.current) return;
-
-    if (isListening) {
-      recognitionRef.current.stop();
-      
-      // Only send to OpenAI if we have a transcript
-      if (transcript) {
-        try {
-          console.log('Sending to ChatGPT:', transcript);
-          
-          // Get ChatGPT response
-          const chatResponse = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: transcript })
-          });
-
-          if (!chatResponse.ok) {
-            throw new Error(`Chat API error: ${chatResponse.status}`);
-          }
-
-          const chatData = await chatResponse.json();
-          console.log('ChatGPT response:', chatData);
-          
-          // Add both messages to conversation
-          setConversation(prev => [
-            ...prev, 
-            `User: ${transcript}`,
-            `AI: ${chatData.response}`
-          ]);
-
-          // Generate and play voice
-          console.log('Sending to ElevenLabs:', chatData.response);
-          const voiceResponse = await fetch('/api/voice', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: chatData.response })
-          });
-
-          if (!voiceResponse.ok) {
-            throw new Error(`Voice API error: ${voiceResponse.status}`);
-          }
-
-          const audioBlob = await voiceResponse.blob();
-          const audioUrl = URL.createObjectURL(audioBlob);
-          
-          console.log('Playing audio response');
-          const audio = new Audio(audioUrl);
-          await audio.play();
-        } catch (error) {
-          console.error('Error in conversation chain:', error);
-        }
-      }
-    } else {
-      setTranscript(''); // Clear previous transcript
-      recognitionRef.current.start();
-    }
-    setIsListening(!isListening);
-  };
-
   // Animated model component
   function AnimatedModel({ model, mousePosition }: { model: THREE.Group, mousePosition: { x: number, y: number } }) {
     const modelRef = useRef<THREE.Group>(null);
@@ -354,6 +368,50 @@ export default function RenderPage() {
     );
   }
 
+  const ImageModal = () => (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)'
+      }}
+      onClick={() => setShowImageModal(false)}
+    >
+      <div 
+        className="relative bg-black rounded-lg overflow-hidden max-w-4xl w-full mx-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        {generatedImage && (
+          <div className="relative aspect-square">
+            <img
+              src={generatedImage}
+              alt="Generated Investment Pitch"
+              className="w-full h-full object-contain"
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 p-4">
+              <a 
+                href={`https://aeneid.explorer.story.foundation/ipa/${ipId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 underline"
+              >
+                View IP on Story Protocol Explorer →
+              </a>
+            </div>
+          </div>
+        )}
+        <button
+          className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all"
+          onClick={() => setShowImageModal(false)}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div 
       className="h-screen w-full bg-cover bg-center bg-no-repeat" 
@@ -361,6 +419,53 @@ export default function RenderPage() {
         backgroundImage: `url('https://images.unsplash.com/photo-1518235506717-e1ed3306a89b?q=80&w=2070')`
       }}
     >
+      {/* Test Button */}
+      <button
+        onClick={async () => {
+          try {
+            // Test image generation
+            const imageResponse = await fetch('/api/generate-image', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pitchDescription: "A decentralized marketplace for freedom CARAJO!"
+              })
+            });
+
+            if (!imageResponse.ok) throw new Error('Failed to generate image');
+            const { imageUrl } = await imageResponse.json();
+            
+            setGeneratedImage(imageUrl);
+            setShowImageModal(true);
+
+            // Test Story Protocol registration
+            const storyResponse = await fetch('/api/story-protocol', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                imageUrl,
+                pitchDescription: "A decentralized marketplace for freedom CARAJO!",
+                walletAddress: "0x123...789", // Test wallet
+                founderName: "Test Founder"
+              })
+            });
+
+            if (!storyResponse.ok) throw new Error('Failed to register IP');
+            const storyData = await storyResponse.json();
+            console.log('Story Protocol test registration:', storyData);
+          } catch (error) {
+            console.error('Test error:', error);
+          }
+        }}
+        className="absolute top-4 right-4 z-50 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+      >
+        Test Image & Story Protocol
+      </button>
+
       {/* Keep video but hide it */}
       <div className="hidden">
         <video
@@ -373,27 +478,6 @@ export default function RenderPage() {
         />
       </div>
 
-      <div className="fixed top-4 left-4 z-50">
-        <button
-          onClick={toggleListening}
-          className={`px-4 py-2 rounded-lg ${
-            isListening 
-              ? 'bg-red-500 hover:bg-red-600' 
-              : 'bg-green-500 hover:bg-green-600'
-          } text-white font-medium transition-colors`}
-        >
-          {isListening ? 'Stop Listening' : 'Start Listening'}
-        </button>
-        <div className="mt-4 p-4 bg-black/50 text-white rounded-lg max-w-md">
-          {conversation.map((message, index) => (
-            <p key={index} className="text-sm mb-2">{message}</p>
-          ))}
-          {isListening && transcript && (
-            <p className="text-sm italic">Current: {transcript}</p>
-          )}
-        </div>
-      </div>
-      
       <Canvas camera={{ position: [0, 2, 5], fov: 45 }}>
         <ambientLight intensity={1.0} />
         <directionalLight 
@@ -428,6 +512,8 @@ export default function RenderPage() {
           Error: {error}
         </div>
       )}
+
+      {showImageModal && <ImageModal />}
     </div>
   );
 }
