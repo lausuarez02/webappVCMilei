@@ -42,11 +42,37 @@ export default function RenderPage() {
           console.log("Call started");
         });
 
-        vapiInstance.on("message", (message) => {
+        vapiInstance.on("message", async (message) => {
           if (message.type === "transcript" && message.role === "user") {
             // Demo mode trigger
             if (message.transcript.toLowerCase().includes("demo")) {
               handleDemo(vapiInstance);
+            }
+            // Check for Twitter handle
+            else if (message.transcript.includes("@") || message.transcript.match(/^[A-Za-z0-9_]{1,15}$/)) {
+              try {
+                const response = await fetch("http://localhost:8005/process", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    message: `Get metrics for Twitter user ${message.transcript} with interval _7Days`
+                  })
+                });
+
+                const data = await response.json();
+                console.log("Twitter metrics:", data);
+
+                if (data.mindshare > 50) {
+                  vapiInstance.say("¡EXCELENTE metrics, CARAJO! Your influence is REVOLUTIONARY! Tell me more about your project! VIVA LA LIBERTAD!");
+                } else {
+                  vapiInstance.say("Your metrics need more LIBERTAD! But tell me about your vision anyway! VIVA LA LIBERTAD CARAJO!");
+                }
+              } catch (error) {
+                console.error("Error checking Twitter metrics:", error);
+                vapiInstance.say("The centralized APIs are failing us! Tell me about your project anyway! VIVA LA LIBERTAD!");
+              }
             }
           }
         });
@@ -118,11 +144,30 @@ Remember previous context and build upon it in the conversation.`
     };
   }, []);
 
-  // Separate demo handler function
+  // Update demo handler with transaction
   const handleDemo = async (vapiInstance: any) => {
     try {
       vapiInstance.say("¡CARAJO! Your project sounds REVOLUTIONARY! Let me invest in this LIBERTAD! VIVA LA LIBERTAD!");
 
+      // Execute transaction
+      const txResponse = await fetch("http://localhost:8005/process", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: "Swap 0.1 ETH for tokens at address 0x6982508145454Ce325dDbE47a25d4ec3d2311933 on base-mainnet"
+        })
+      });
+
+      const txData = await txResponse.json();
+      console.log("Transaction response:", txData);
+
+      if (!txData.success) {
+        throw new Error('Transaction failed');
+      }
+
+      // Generate image
       const imageResponse = await fetch('/api/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -135,6 +180,7 @@ Remember previous context and build upon it in the conversation.`
       const { imageUrl } = await imageResponse.json();
       setGeneratedImage(imageUrl);
 
+      // Register with Story Protocol
       const storyResponse = await fetch('/api/story-protocol', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -151,7 +197,7 @@ Remember previous context and build upon it in the conversation.`
       setIpId(storyData.ipId);
       setShowImageModal(true);
 
-      vapiInstance.say("¡INVIERTO MI CAPITAL, CARAJO! I've registered your IP on Story Protocol! The revolution is secured! VIVA LA LIBERTAD CARAJO!");
+      vapiInstance.say("¡INVIERTO MI CAPITAL, CARAJO! Transaction complete and IP rights secured! The revolution grows stronger! VIVA LA LIBERTAD CARAJO!");
     } catch (error) {
       console.error('Demo error:', error);
       vapiInstance.say("ERROR in the demo! The state must be interfering! MALDITOS KEYNESIANOS!");
